@@ -73,7 +73,8 @@ const StreamsList = ({ className, video, type, externalPlayerCallbackCanMarkWatc
                                 });
                             }
                         },
-                        addonName: streams.addon.manifest.name
+                        addonName: streams.addon.manifest.name,
+                        transportUrl: streams.addon.transportUrl
                     }))
                 };
 
@@ -196,6 +197,7 @@ const StreamsList = ({ className, video, type, externalPlayerCallbackCanMarkWatc
                                             deepLinks={stream.deepLinks}
                                             externalPlayerCallbackCanMarkWatched={externalPlayerCallbackCanMarkWatched}
                                             onClick={stream.onClick}
+                                            tnpStream={stream}
                                         />
                                     ))}
                                     {

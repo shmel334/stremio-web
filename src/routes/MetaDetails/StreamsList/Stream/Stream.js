@@ -12,8 +12,10 @@ const ActionButton = require('stremio/components/MetaPreview/ActionButton');
 const { default: useRouteFocused } = require('stremio/common/useRouteFocused');
 const StreamPlaceholder = require('./StreamPlaceholder');
 const styles = require('./styles');
+const TNP = require('stremio/tnp/flags');
+const StreamDownload = require('stremio/tnp/StreamDownload');
 
-const Stream = ({ className = '', compact = false, isEpg = false, videoId = undefined, videoReleased = undefined, addonName, name, description, thumbnail = undefined, progress, deepLinks, externalPlayerCallbackCanMarkWatched, ...props }) => {
+const Stream = ({ className = '', compact = false, isEpg = false, videoId = undefined, videoReleased = undefined, addonName, name, description, thumbnail = undefined, progress, deepLinks, externalPlayerCallbackCanMarkWatched, tnpStream = undefined, ...props }) => {
     const profile = useProfile();
     const toast = useToast();
     const platform = usePlatform();
@@ -273,12 +275,13 @@ const Stream = ({ className = '', compact = false, isEpg = false, videoId = unde
                         </Button>
                 }
                 {
-                    !isEpg && downloadLink &&
+                    TNP.copyDownloadLink && !isEpg && downloadLink &&
                         <Button className={styles['context-menu-option-container']} title={t('CTX_DOWNLOAD_VIDEO')} onClick={copyDownloadLink}>
                             <Icon className={styles['menu-icon']} name={'download'} />
                             <div className={styles['context-menu-option-label']}>{t('CTX_COPY_VIDEO_DOWNLOAD_LINK')}</div>
                         </Button>
                 }
+                {!isEpg && <StreamDownload stream={tnpStream} videoId={videoId} optionClassName={styles['context-menu-option-container']} iconClassName={styles['menu-icon']} labelClassName={styles['context-menu-option-label']} closeMenu={closeMenu} />}
             </div>
         );
     }, [copyStreamLink, onClick, isEpg, href, target, download]);
@@ -337,6 +340,7 @@ Stream.propTypes = {
         })
     }),
     externalPlayerCallbackCanMarkWatched: PropTypes.bool,
+    tnpStream: PropTypes.object,
     onClick: PropTypes.func
 };
 

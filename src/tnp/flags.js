@@ -23,4 +23,6 @@ module.exports = {
     share: false,
     // свои «подобається / не подобається» с записью к нам (src/tnp/Ratings) вместо «лайк / сердце» Stremio
     tnpRatings: true,
+    // «Copy video download link» в меню стрима — вместо него «Скачати» / «Скачати пак» (src/tnp/StreamDownload)
+    copyDownloadLink: false,
 };

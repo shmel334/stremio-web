@@ -1,0 +1,81 @@
+// TnP: панель «Скачати пак» внутри меню стрима
+
+.pack {
+    padding: 0.5rem 1.5rem 1rem;
+    border-top: 1px solid var(--color-placeholder);
+    color: var(--primary-foreground-color);
+
+    .seasons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+
+        .season {
+            padding: 0.35rem 0.9rem;
+            border-radius: 2rem;
+            font-size: 0.9rem;
+            background-color: var(--overlay-color);
+
+            &.active {
+                background-color: #6366f1;
+            }
+        }
+    }
+
+    .episodes {
+        max-height: 16rem;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+
+        .note {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            padding: 0.5rem 0;
+        }
+
+        .episode {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.95rem;
+            cursor: pointer;
+
+            input {
+                flex: none;
+                width: 1.1rem;
+                height: 1.1rem;
+                accent-color: #6366f1;
+            }
+
+            .episode-name {
+                flex: 1;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .episode-size {
+                flex: none;
+                opacity: 0.7;
+                font-size: 0.85rem;
+            }
+        }
+    }
+
+    .pack-download {
+        margin-top: 0.9rem;
+        padding: 0.7rem 1rem;
+        border-radius: 0.75rem;
+        text-align: center;
+        font-weight: 600;
+        background-color: #6366f1;
+
+        &.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    }
+}
