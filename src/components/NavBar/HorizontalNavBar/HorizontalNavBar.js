@@ -12,6 +12,8 @@ const SearchBar = require('./SearchBar');
 const NavMenu = require('./NavMenu');
 const styles = require('./styles');
 const TNP = require('stremio/tnp/flags');
+const CabinetButton = require('stremio/tnp/CabinetButton');
+const HeaderSearch = require('stremio/tnp/HeaderSearch');
 const { t } = require('i18next');
 
 const HorizontalNavBar = React.memo(({ className, route, query, title, backButton, searchBar, fullscreenButton, navMenu, originPath, hdrInfo, ...props }) => {
@@ -48,11 +50,14 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
             }
             {
                 searchBar && route !== 'addons' ?
-                    <SearchBar className={styles['search-bar']} query={query} active={route === 'search'} />
+                    <HeaderSearch className={styles['search-bar']} active={route === 'search'}>
+                        <SearchBar className={styles['search-bar']} query={query} active={route === 'search'} />
+                    </HeaderSearch>
                     :
                     null
             }
             <div className={styles['buttons-container']}>
+                {searchBar ? <CabinetButton desktopOnly={true} /> : null}
                 {
                     hdrInfo && (hdrInfo.gamma === 'pq' || hdrInfo.gamma === 'hlg') ?
                         <div className={styles['hdr-indicator']} title={hdrInfo.gamma === 'pq' ? 'HDR10' : 'HLG'}>
