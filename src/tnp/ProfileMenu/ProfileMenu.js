@@ -8,8 +8,8 @@ const PropTypes = require('prop-types');
 const { useNavigate } = require('react-router-dom');
 const { useCore } = require('stremio/core');
 
-const SCRIPT_URL = '/js/profile-menu.js?v=1';
-const STYLE_URL = '/css/profile-menu.css?v=1';
+const SCRIPT_URL = '/js/profile-menu.js?v=2';
+const STYLE_URL = '/css/profile-menu.css?v=2';
 
 let assets = null;
 const loadAssets = () => {
