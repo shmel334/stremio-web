@@ -25,6 +25,11 @@
     > .phone-only.phone-only {
         display: none;
     }
+
+    // как у их полноэкранного режима на ПК (overrides.less): знак крупнее, кнопка та же
+    .fullscreen-icon {
+        transform: scale(1.3);
+    }
 }
 
 @media only screen and (max-width: @minimum) {

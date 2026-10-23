@@ -26,7 +26,7 @@ const HeaderButtons = ({ buttonClassName, iconClassName }) => {
             {
                 supported ?
                     <Button className={classnames(buttonClassName, styles['button'], styles['phone-only'])} title={fullscreen ? 'Вийти з повноекранного режиму' : 'На весь екран'} tabIndex={-1} onClick={fullscreen ? exitFullscreen : requestFullscreen}>
-                        <Icon className={iconClassName} name={fullscreen ? 'minimize' : 'maximize'} />
+                        <Icon className={classnames(iconClassName, styles['fullscreen-icon'])} name={fullscreen ? 'minimize' : 'maximize'} />
                     </Button>
                     :
                     null
