@@ -23,6 +23,7 @@ const { default: Guide } = require('./Guide');
 const { default: DaySelector } = require('./Guide/DaySelector');
 const { default: useLiveTvGuide } = require('./useLiveTvGuide');
 const styles = require('./styles');
+const TNP = require('stremio/tnp/flags');
 
 const SCROLL_TO_BOTTOM_THRESHOLD = 400;
 
@@ -337,7 +338,7 @@ const Discover = () => {
             <div className={styles['discover-content']}>
                 <div className={styles['catalog-container']}>
                     <div className={classnames(styles['selectable-inputs-container'], { [styles['epg-inputs']]: isEpgLayout })}>
-                        {isMobile ? <div className={styles['mobile-filters']}>
+                        {isMobile && TNP.mobileDiscoverSheet ? <div className={styles['mobile-filters']}>
                             <div className={styles['catalog-summary']}>
                                 <div className={styles['catalog-type']}>{selectedTypeOption?.label ?? t('SELECT_TYPE')}</div>
                                 <div className={styles['catalog-name']} title={selectedCatalogOption?.label}>{selectedCatalogOption?.label ?? t('SELECT_CATALOG')}</div>
