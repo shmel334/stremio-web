@@ -12,8 +12,7 @@ const SearchBar = require('./SearchBar');
 const NavMenu = require('./NavMenu');
 const styles = require('./styles');
 const TNP = require('stremio/tnp/flags');
-const CabinetButton = require('stremio/tnp/CabinetButton');
-const HeaderSearch = require('stremio/tnp/HeaderSearch');
+const HeaderButtons = require('stremio/tnp/HeaderButtons');
 const { t } = require('i18next');
 
 const HorizontalNavBar = React.memo(({ className, route, query, title, backButton, searchBar, fullscreenButton, navMenu, originPath, hdrInfo, ...props }) => {
@@ -35,11 +34,13 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
                     </Button>
                     :
                     <div className={styles['logo-container']}>
+                        {TNP.headerLogo &&
                         <Image
                             className={styles['logo']}
                             src={require('/assets/images/stremio_symbol.png')}
                             alt={' '}
                         />
+                        }
                     </div>
             }
             {
@@ -50,14 +51,12 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
             }
             {
                 searchBar && route !== 'addons' ?
-                    <HeaderSearch className={styles['search-bar']} active={route === 'search'}>
-                        <SearchBar className={styles['search-bar']} query={query} active={route === 'search'} />
-                    </HeaderSearch>
+                    <SearchBar className={styles['search-bar']} query={query} active={route === 'search'} />
                     :
                     null
             }
             <div className={styles['buttons-container']}>
-                {searchBar ? <CabinetButton desktopOnly={true} /> : null}
+                {searchBar ? <HeaderButtons /> : null}
                 {
                     hdrInfo && (hdrInfo.gamma === 'pq' || hdrInfo.gamma === 'hlg') ?
                         <div className={styles['hdr-indicator']} title={hdrInfo.gamma === 'pq' ? 'HDR10' : 'HLG'}>

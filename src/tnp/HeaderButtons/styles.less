@@ -1,0 +1,65 @@
+// TnP: кнопки шапки. Размеры и прозрачность — как у кнопок шапки Stremio (HorizontalNavBar/styles.less).
+
+@import (reference) '~stremio/common/screen-sizes.less';
+
+.header-buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+
+    .button {
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 3.5rem;
+        height: 3.5rem;
+        border-radius: 0.75rem;
+        color: var(--primary-foreground-color);
+        opacity: 0.6;
+
+        .sprite-icon {
+            width: 1.9rem;
+            height: 1.9rem;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .icon {
+            width: 2rem;
+            height: 2rem;
+            color: var(--primary-foreground-color);
+        }
+
+        @media (pointer: fine) {
+            &:hover {
+                background-color: var(--overlay-color);
+                opacity: 1;
+            }
+        }
+    }
+
+    .phone-only {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .header-buttons {
+        gap: 0;
+        margin-right: 0.5rem;
+
+        .button {
+            width: 3rem;
+            height: 3rem;
+        }
+
+        .phone-only {
+            display: flex;
+        }
+    }
+}
