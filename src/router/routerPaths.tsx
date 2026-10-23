@@ -46,11 +46,6 @@ export default [
         element: <routes.MetaDetails />,
     },
     {
-        path: '/addons/:type?/:transportUrl?/:catalogId?',
-        view: 3,
-        element: <routes.Addons />,
-    },
-    {
         path: '/settings',
         view: 3,
         element: <routes.Settings />,

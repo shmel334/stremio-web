@@ -64,21 +64,15 @@ const EventModal = () => {
                             null
                     }
                     {
-                        modal?.addon?.manifestUrl ?
-                            <Button className={styles['action-button']} href={`#/addons?addon=${encodeURIComponent(modal.addon.manifestUrl)}`} onClick={onClose}>
+                        // TnP: кнопки «установить аддон» нет — каталог аддонов снят
+                        modal.externalUrl ?
+                            <Button className={styles['action-button']} href={modal.externalUrl} target={'_blank'}>
                                 <div className={styles['button-label']}>
-                                    { t('INSTALL_ADDON') }
+                                    { t('LEARN_MORE') }
                                 </div>
                             </Button>
                             :
-                            modal.externalUrl ?
-                                <Button className={styles['action-button']} href={modal.externalUrl} target={'_blank'}>
-                                    <div className={styles['button-label']}>
-                                        { t('LEARN_MORE') }
-                                    </div>
-                                </Button>
-                                :
-                                null
+                            null
                     }
                 </div>
             </ModalDialog>
