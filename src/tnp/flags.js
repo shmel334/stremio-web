@@ -19,4 +19,8 @@ module.exports = {
     mobileDiscoverSheet: false,
     // знак слева вверху шапки (место остаётся, чтобы поиск не съезжал)
     headerLogo: false,
+    // «Поделиться» на странице тайтла
+    share: false,
+    // свои «подобається / не подобається» с записью к нам (src/tnp/Ratings) вместо «лайк / сердце» Stremio
+    tnpRatings: true,
 };

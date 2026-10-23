@@ -20,7 +20,8 @@ const ActionButton = require('./ActionButton');
 const MetaLinks = require('./MetaLinks');
 const MetaPreviewPlaceholder = require('./MetaPreviewPlaceholder');
 const styles = require('./styles');
-const { Ratings } = require('./Ratings');
+const TNP = require('stremio/tnp/flags');
+const Ratings = TNP.tnpRatings ? require('stremio/tnp/Ratings') : require('./Ratings').Ratings;
 
 const ALLOWED_LINK_REDIRECTS = [
     routesRegexp.search.regexp,
@@ -257,7 +258,7 @@ const MetaPreview = React.forwardRef(({ className, compact, name, logo, backgrou
                             null
                     }
                     {
-                        linksGroups.has(CONSTANTS.SHARE_LINK_CATEGORY) && !compact ?
+                        TNP.share && linksGroups.has(CONSTANTS.SHARE_LINK_CATEGORY) && !compact ?
                             <React.Fragment>
                                 <ActionButton
                                     className={styles['action-button']}

@@ -3,8 +3,8 @@
 
 // Свои названия поверх словаря (решения оператора)
 const OVERRIDES = {
-    'uk-UA': { Discover: 'Каталоги', STREMIO_TV_NAV_DISCOVER: 'Каталоги' },
-    'ru-RU': { Discover: 'Каталоги' },
+    'uk-UA': { Discover: 'Каталоги', STREMIO_TV_NAV_DISCOVER: 'Каталоги', UPDATER_TITLE: 'Доступна нова версія TnP' },
+    'ru-RU': { Discover: 'Каталоги', UPDATER_TITLE: 'Доступна новая версия TnP' },
     'en-US': { Discover: 'Catalogs' },
 };
 
