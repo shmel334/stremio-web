@@ -10,4 +10,8 @@ module.exports = {
     stremioAccountLinks: false,
     // «Play URL/Magnet link» и «Help & Feedback» в меню профиля
     stremioMenuExtras: false,
+    // меню профиля справа сверху: в шапке остаётся только полноэкранный режим
+    navMenu: false,
+    // раздел Streaming настроек: связь с локальным сервером приложения Stremio (в вебе закрыт CSP)
+    streamingSection: false,
 };

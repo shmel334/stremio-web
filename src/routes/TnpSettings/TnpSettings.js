@@ -5,7 +5,7 @@
 const React = require('react');
 const { useCore } = require('stremio/core');
 const { useProfile } = require('stremio/common');
-const { Button, MainNavBars } = require('stremio/components');
+const { MainNavBars } = require('stremio/components');
 const { languageSettings, applySettings } = require('stremio/tnp/coreSettings');
 const styles = require('./styles');
 
@@ -38,10 +38,7 @@ const TnpSettings = () => {
     return (
         <MainNavBars className={styles['tnp-settings-container']} route={'tnp'}>
             <div className={styles['tnp-settings-content']}>
-                <div id={'viewPrefsBox'} className={styles['view-prefs']} />
-                <Button className={styles['player-settings-link']} title={'Налаштування плеєра'} href={'#/settings'}>
-                    Налаштування плеєра
-                </Button>
+                <div id={'viewPrefsBox'} />
             </div>
         </MainNavBars>
     );

@@ -5,6 +5,7 @@ import { usePlatform } from 'stremio/common';
 import { Button } from 'stremio/components';
 import { SECTIONS } from '../constants';
 import styles from './Menu.less';
+import TNP from 'stremio/tnp/flags';
 
 type Props = {
     selected: string,
@@ -33,9 +34,11 @@ const Menu = ({ selected, streamingServer, onSelect }: Props) => {
             <Button className={classNames(styles['button'], { [styles['selected']]: selected === SECTIONS.PLAYER })} title={t('SETTINGS_NAV_PLAYER')} data-section={SECTIONS.PLAYER} onClick={onSelect}>
                 { t('SETTINGS_NAV_PLAYER') }
             </Button>
+            {TNP.streamingSection &&
             <Button className={classNames(styles['button'], { [styles['selected']]: selected === SECTIONS.STREAMING })} title={t('SETTINGS_NAV_STREAMING')} data-section={SECTIONS.STREAMING} onClick={onSelect}>
                 { t('SETTINGS_NAV_STREAMING') }
             </Button>
+            }
             { !platform.isMobile && <Button className={classNames(styles['button'], { [styles['selected']]: selected === SECTIONS.SHORTCUTS })} title={t('SETTINGS_NAV_SHORTCUTS')} data-section={SECTIONS.SHORTCUTS} onClick={onSelect}>
                 { t('SETTINGS_NAV_SHORTCUTS') }
             </Button> }

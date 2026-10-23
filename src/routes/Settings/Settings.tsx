@@ -14,6 +14,7 @@ import Streaming from './Streaming';
 import Shortcuts from './Shortcuts';
 import Info from './Info';
 import styles from './Settings.less';
+import TNP from 'stremio/tnp/flags';
 
 const Settings = () => {
     const routeFocused = useRouteFocused();
@@ -106,11 +107,13 @@ const Settings = () => {
                         ref={playerSectionRef}
                         profile={profile}
                     />
+                    {TNP.streamingSection &&
                     <Streaming
                         ref={streamingServerSectionRef}
                         profile={profile}
                         streamingServer={streamingServer}
                     />
+                    }
                     {
                         !platform.isMobile && <Shortcuts ref={shortcutsSectionRef} />
                     }

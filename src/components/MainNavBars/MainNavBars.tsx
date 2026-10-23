@@ -5,13 +5,14 @@ import classnames from 'classnames';
 import { VerticalNavBar, HorizontalNavBar } from 'stremio/components/NavBar';
 import { useContentGamepadNavigation, useVerticalNavGamepadNavigation } from 'stremio/services/GamepadNavigation';
 import styles from './MainNavBars.less';
+import { settingsTab } from 'stremio/tnp/tabs';
 
 const TABS = [
     { id: 'board', label: 'Board', icon: 'home', href: '/' },
     { id: 'discover', label: 'Discover', icon: 'discover', href: '/discover' },
     { id: 'library', label: 'Library', icon: 'library', href: '/library' },
     { id: 'calendar', label: 'Calendar', icon: 'calendar', href: '/calendar' },
-    { id: 'tnp', label: 'TnP', icon: 'person', href: '/tnp' },
+    settingsTab,
     { id: 'settings', label: 'SETTINGS', icon: 'settings', href: '/settings' },
 ];
 
