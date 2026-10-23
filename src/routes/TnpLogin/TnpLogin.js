@@ -5,6 +5,7 @@
 const React = require('react');
 const { useNavigate } = require('react-router-dom');
 const { useCore } = require('stremio/core');
+const { applyAfterLogin } = require('stremio/tnp/coreSettings');
 const { Button, Image } = require('stremio/components');
 const styles = require('./styles');
 
@@ -38,6 +39,7 @@ const TnpLogin = () => {
                             setState({ status: 'error', code: data && data.error ? data.error : null });
                             return;
                         }
+                        applyAfterLogin(core);
                         core.transport.dispatch({
                             action: 'Ctx',
                             args: {

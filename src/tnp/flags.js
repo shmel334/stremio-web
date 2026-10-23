@@ -6,4 +6,8 @@ module.exports = {
     addonsCatalog: false,
     // локального стриминг-сервера у веба нет, стримы идут через ноды
     streamingServerWarning: false,
+    // ссылки на сайт Stremio и Trakt в настройках (поддержка, условия, удаление аккаунта и т. п.)
+    stremioAccountLinks: false,
+    // «Play URL/Magnet link» и «Help & Feedback» в меню профиля
+    stremioMenuExtras: false,
 };

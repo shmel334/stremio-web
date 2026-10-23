@@ -7,6 +7,7 @@ import { Section, Option, Link } from '../components';
 import User from './User';
 import useDataExport from './useDataExport';
 import styles from './General.less';
+import TNP from 'stremio/tnp/flags';
 
 type Props = {
     profile: Profile,
@@ -101,6 +102,7 @@ const General = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
             <User profile={profile} />
         </Section>
 
+        {TNP.stremioAccountLinks &&
         <Section>
             {
                 profile?.auth?.user &&
@@ -161,6 +163,7 @@ const General = forwardRef<HTMLDivElement, Props>(({ profile }: Props, ref) => {
                     </Option>
             }
         </Section>
+        }
     </>;
 });
 

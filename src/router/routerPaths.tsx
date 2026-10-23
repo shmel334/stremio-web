@@ -52,6 +52,11 @@ export default [
         element: <routes.Settings />,
     },
     {
+        path: '/tnp',
+        view: 3,
+        element: <routes.TnpSettings />,
+    },
+    {
         path: PLAYER_PATH,
         view: 4,
         element: <routes.Player />,

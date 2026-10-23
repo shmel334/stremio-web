@@ -12,6 +12,7 @@ const { default: Settings } = require('./Settings');
 const Player = require('./Player');
 const Intro = require('./Intro');
 const TnpLogin = require('./TnpLogin');
+const TnpSettings = require('./TnpSettings');
 
 module.exports = {
     Addons,
@@ -25,5 +26,6 @@ module.exports = {
     Settings,
     Player,
     Intro,
-    TnpLogin
+    TnpLogin,
+    TnpSettings
 };

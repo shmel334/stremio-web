@@ -1,0 +1,29 @@
+// TnP: наши настройки. Переменные — те, что ждёт view-prefs.js из ЛК.
+
+.tnp-settings-container {
+    --border-color: rgba(255, 255, 255, 0.12);
+    --text-primary: rgba(255, 255, 255, 0.92);
+    --text-secondary: rgba(255, 255, 255, 0.6);
+
+    .tnp-settings-content {
+        height: 100%;
+        max-width: 40rem;
+        padding: 1.5rem;
+        overflow-y: auto;
+        color: var(--text-primary);
+
+        .view-prefs {
+            margin-bottom: 1.5rem;
+        }
+
+        .player-settings-link {
+            display: inline-block;
+            font-size: 1rem;
+            color: #818cf8;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}
