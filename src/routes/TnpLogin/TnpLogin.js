@@ -25,6 +25,10 @@ const TnpLogin = () => {
     const navigate = useNavigate();
     const [state, setState] = React.useState({ status: 'loading', code: null });
     const login = React.useCallback(() => {
+        // идёт выход из меню профиля — не входить заново
+        if (window.__tnpLoggingOut) {
+            return;
+        }
         setState({ status: 'loading', code: null });
         fetch(SESSION_URL, { credentials: 'same-origin', cache: 'no-store' })
             .then((response) => {

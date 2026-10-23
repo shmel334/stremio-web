@@ -9,17 +9,15 @@
     flex-direction: row;
     align-items: center;
     gap: 0.5rem;
+    // у Stremio overflow: hidden по умолчанию — карточка меню профиля обрезалась бы
+    overflow: visible;
 
     .button {
         color: var(--primary-foreground-color);
     }
 
-    .sprite-icon {
-        fill: none;
-        stroke: currentColor;
-        stroke-width: 2;
-        stroke-linecap: round;
-        stroke-linejoin: round;
+    .profile {
+        margin-right: 0.5rem;
     }
 
     > .phone-only.phone-only {
