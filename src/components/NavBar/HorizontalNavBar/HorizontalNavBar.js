@@ -56,7 +56,7 @@ const HorizontalNavBar = React.memo(({ className, route, query, title, backButto
                     null
             }
             <div className={styles['buttons-container']}>
-                {searchBar ? <HeaderButtons /> : null}
+                {searchBar ? <HeaderButtons buttonClassName={classnames(styles['button-container'], styles['menu-button-container'])} iconClassName={styles['icon']} /> : null}
                 {
                     hdrInfo && (hdrInfo.gamma === 'pq' || hdrInfo.gamma === 'hlg') ?
                         <div className={styles['hdr-indicator']} title={hdrInfo.gamma === 'pq' ? 'HDR10' : 'HLG'}>

@@ -4,7 +4,7 @@
 // Стоит на месте пазла «Аддоны»: на телефоне Stremio прячет ПОСЛЕДНЮЮ вкладку (свои настройки,
 // они к тому же скрыты hide-stremio-settings.less), и наша остаётся видимой.
 
-require('./hide-stremio-settings.less');
+require('./overrides.less');
 
 const CABINET_URL = '/dashboard.html#overview';
 

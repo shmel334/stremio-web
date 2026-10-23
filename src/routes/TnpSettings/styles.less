@@ -1,4 +1,7 @@
 // TnP: наши настройки. Переменные — те, что ждёт view-prefs.js из ЛК.
+// Блоки на большую часть экрана (оператор 23.10): ПК — до 90% ширины, телефон — во всю ширину.
+
+@import (reference) '~stremio/common/screen-sizes.less';
 
 .tnp-settings-container {
     --border-color: rgba(255, 255, 255, 0.12);
@@ -7,9 +10,19 @@
 
     .tnp-settings-content {
         height: 100%;
-        max-width: 40rem;
-        padding: 1.5rem;
+        width: 90%;
+        max-width: 110rem;
+        padding: 1.5rem 2rem;
         overflow-y: auto;
         color: var(--text-primary);
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .tnp-settings-container {
+        .tnp-settings-content {
+            width: 100%;
+            padding: 1rem;
+        }
     }
 }

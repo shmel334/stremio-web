@@ -1,0 +1,23 @@
+// TnP: глобальные правки поверх вёрстки Stremio — без правки их файлов. Классы у Stremio — CSS-модули
+// с хешем в хвосте, но с исходным именем в начале, поэтому цепляемся по [class*="имя-"] (первым в атрибуте может стоять класс от родителя).
+
+@import (reference) '~stremio/common/screen-sizes.less';
+
+// Вкладка «Настройки» Stremio в навигации скрыта — настройки клиента живут во вкладке TnP.
+// Не удаляем её из списка вкладок: на телефоне Stremio прячет ПОСЛЕДНЮЮ вкладку (:last-child),
+// и последней стала бы наша. Маршрут #/settings остаётся рабочим по прямой ссылке.
+:global(nav a[href="#/settings"]) {
+    display: none !important;
+}
+
+// Телефон: лупа в строке поиска — слева от поля ввода (решение оператора 23.10)
+@media only screen and (max-width: @minimum) {
+    :global([class*="search-bar-container-"] > [class*="submit-button-container-"]) {
+        order: -1;
+        padding: 0 0.5rem 0 1.25rem;
+    }
+
+    :global([class*="search-bar-container-"] > [class*="search-input-"]) {
+        padding-left: 0.25rem;
+    }
+}
