@@ -17,12 +17,13 @@ const { HashRouter } = require('react-router-dom');
 const i18n = require('i18next');
 const { initReactI18next } = require('react-i18next');
 const stremioTranslations = require('stremio-translations');
+const brandTranslations = require('./tnp/brand');
 const App = require('./App');
 const { default: WebUpdateScreen } = require('./App/WebUpdateScreen');
 const { CoreProvider } = require('./core');
 const { FileDropProvider, PlatformProvider } = require('./common');
 
-const translations = Object.fromEntries(Object.entries(stremioTranslations()).map(([key, value]) => [key, {
+const translations = Object.fromEntries(Object.entries(brandTranslations(stremioTranslations())).map(([key, value]) => [key, {
     translation: value
 }]));
 
