@@ -8,7 +8,8 @@ export default [
     {
         path: '/intro',
         view: 1,
-        element: <routes.Intro />,
+        // TnP: вместо экрана входа Stremio — автовход по сессии TnP
+        element: <routes.TnpLogin />,
     },
     {
         path: '/discover/:transportUrl?/:type?/:catalogId?',

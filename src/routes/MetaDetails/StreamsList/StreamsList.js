@@ -12,6 +12,7 @@ const { Button, Image, MultiselectMenu } = require('stremio/components');
 const { useCore } = require('stremio/core');
 const Stream = require('./Stream');
 const styles = require('./styles');
+const TNP = require('stremio/tnp/flags');
 const { usePlatform, useProfile } = require('stremio/common');
 const { default: SeasonEpisodePicker } = require('../EpisodePicker');
 
@@ -30,8 +31,9 @@ const StreamsList = ({ className, video, type, externalPlayerCallbackCanMarkWatc
         streamsContainerRef.current.scrollTo({ top: 0, left: 0, behavior: platform.name === 'ios' ? 'smooth' : 'instant' });
         setSelectedAddon(value);
     }, [platform]);
-    // TnP: каталога аддонов нет, набор аддонов ведёт ЛК
-    const showInstallAddonsButton = false;
+    const showInstallAddonsButton = React.useMemo(() => {
+        return TNP.addonsCatalog && (!profile || profile.auth === null || profile.auth?.user?.isNewUser === true && !video?.upcoming);
+    }, [profile, video]);
     const backButtonOnClick = React.useCallback(() => {
         if (video.deepLinks && typeof video.deepLinks.metaDetailsVideos === 'string') {
             const navigateTo = `${video.deepLinks.metaDetailsVideos}${

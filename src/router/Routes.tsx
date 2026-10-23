@@ -57,8 +57,8 @@ const Routes = () => {
      * Replaced onRouteChange with following useEffect:
      */
     React.useEffect(() => {
-        // Handle redirect if user logs out
-        if (previousAuthRef.current !== null && profile.auth === null) {
+        // TnP: веб работает только залогиненным — без входа сразу на автовход
+        if (profile.auth === null && location.pathname !== '/intro') {
             previousAuthRef.current = profile.auth;
             navigate('/intro', { replace: true });
         }

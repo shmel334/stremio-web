@@ -6,6 +6,7 @@ const { default: Button } = require('stremio/components/Button');
 const ModalDialog = require('stremio/components/ModalDialog');
 const useEvents = require('./useEvents');
 const styles = require('./styles');
+const TNP = require('stremio/tnp/flags');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 
 const EventModal = () => {
@@ -64,15 +65,21 @@ const EventModal = () => {
                             null
                     }
                     {
-                        // TnP: кнопки «установить аддон» нет — каталог аддонов снят
-                        modal.externalUrl ?
-                            <Button className={styles['action-button']} href={modal.externalUrl} target={'_blank'}>
+                        TNP.addonsCatalog && modal?.addon?.manifestUrl ?
+                            <Button className={styles['action-button']} href={`#/addons?addon=${encodeURIComponent(modal.addon.manifestUrl)}`} onClick={onClose}>
                                 <div className={styles['button-label']}>
-                                    { t('LEARN_MORE') }
+                                    { t('INSTALL_ADDON') }
                                 </div>
                             </Button>
                             :
-                            null
+                            modal.externalUrl ?
+                                <Button className={styles['action-button']} href={modal.externalUrl} target={'_blank'}>
+                                    <div className={styles['button-label']}>
+                                        { t('LEARN_MORE') }
+                                    </div>
+                                </Button>
+                                :
+                                null
                     }
                 </div>
             </ModalDialog>

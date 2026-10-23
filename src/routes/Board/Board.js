@@ -10,6 +10,7 @@ const useBoard = require('./useBoard');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
 const { default: useLiveTvContinueWatching } = require('./useLiveTvContinueWatching');
 const styles = require('./styles');
+const TNP = require('stremio/tnp/flags');
 const { default: StreamingServerWarning } = require('./StreamingServerWarning');
 
 const THRESHOLD = 5;
@@ -30,7 +31,7 @@ const Board = () => {
         (continueWatchingPreview.items.length > 0 ? 1 : 0) +
         (liveTvCatalog.items.length > 0 ? 1 : 0);
     const showStreamingServerWarning = React.useMemo(() => {
-        return streamingServer.settings !== null && streamingServer.settings.type === 'Err' && (
+        return TNP.streamingServerWarning && streamingServer.settings !== null && streamingServer.settings.type === 'Err' && (
             isNaN(profile.settings.streamingServerWarningDismissed.getTime()) ||
             profile.settings.streamingServerWarningDismissed.getTime() < Date.now());
     }, [profile.settings, streamingServer.settings]);
