@@ -36,6 +36,12 @@ const useFilesMode = () => {
     return isActive();
 };
 
+// путь стримов из адреса страницы: #/detail/<type>/<id>[/<videoId>] — у фильма videoId = id
+const streamPath = () => {
+    const match = /^#\/detail\/([^/]+)\/([^/?]+)(?:\/([^/?]+))?/.exec(window.location.hash);
+    return match ? { type: decodeURIComponent(match[1]), id: decodeURIComponent(match[3] || match[2]) } : null;
+};
+
 const isOwnAddon = (addon) => !!addon && typeof addon.transportUrl === 'string' &&
     (/stream\.tnp/.test(addon.transportUrl) || /TnP/i.test((addon.manifest && addon.manifest.name) || ''));
 
@@ -66,7 +72,7 @@ const withPlayerLink = (template, encoded) => {
 const useFilesStreams = (streams, core) => {
     const active = useFilesMode();
     const own = active && Array.isArray(streams) ? streams.find((entry) => entry && isOwnAddon(entry.addon)) : null;
-    const path = own && own.request ? own.request.path : null;
+    const path = own ? streamPath() : null;
     const url = path ? `${own.addon.transportUrl.replace(/\/manifest\.json.*$/, '')}/stream/${encodeURIComponent(path.type)}/${encodeURIComponent(path.id)}.json?${FILES_PURPOSE}` : null;
     const template = own && own.content && own.content.type === 'Ready' ?
         (own.content.content.find((s) => s.deepLinks && typeof s.deepLinks.player === 'string') || {}).deepLinks?.player || null
