@@ -9,7 +9,9 @@ const { MainNavBars } = require('stremio/components');
 const { languageSettings, applySettings } = require('stremio/tnp/coreSettings');
 const styles = require('./styles');
 
-const VIEW_PREFS_SCRIPT = '/js/view-prefs.js?v=8';
+// Та сама адреса, що в ЛК: TnP веде її на view-prefs.js?h=<хеш вмісту>, тож версію тут не пінимо (25.10:
+// пін ?v=8 лишив /watch на старому файлі, коли ЛК уже показував нові блоки).
+const VIEW_PREFS_SCRIPT = '/js/view-prefs.latest.js';
 
 const TnpSettings = () => {
     const core = useCore();
