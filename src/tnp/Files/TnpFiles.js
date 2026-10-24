@@ -10,7 +10,8 @@ const classnames = require('classnames');
 const { useCore } = require('stremio/core');
 // напрямую, не через stremio/components: тот сам грузит MetaPreview → сюда (круговой require в CommonJS)
 const { default: Button } = require('stremio/components/Button');
-const ModalDialog = require('stremio/components/ModalDialog');
+const ReactDOM = require('react-dom');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const styles = require('./styles');
 
 const FILES_PURPOSE = 'purpose=files';
@@ -73,6 +74,12 @@ const TnpFiles = ({ className }) => {
         load();
     }, [load]);
     const onClose = React.useCallback(() => setOpen(false), []);
+    React.useEffect(() => {
+        if (!open) return;
+        const onKey = (event) => { if (event.key === 'Escape') setOpen(false); };
+        window.addEventListener('keydown', onKey);
+        return () => window.removeEventListener('keydown', onKey);
+    }, [open]);
 
     return (
         <React.Fragment>
@@ -82,9 +89,21 @@ const TnpFiles = ({ className }) => {
             </Button>
             {
                 open ?
-                    <ModalDialog className={styles['files-modal']} title={'Файли'} onCloseRequest={onClose}>
-                        <FilesList state={state} onClose={onClose} />
-                    </ModalDialog>
+                    // своё окно поверх всей страницы: контейнер окон Stremio на странице тайтла — левая колонка
+                    ReactDOM.createPortal(
+                        <div className={styles['files-overlay']} onClick={onClose}>
+                            <div className={styles['files-modal']} onClick={(event) => event.stopPropagation()}>
+                                <div className={styles['files-header']}>
+                                    <div className={styles['files-title']}>Файли</div>
+                                    <Button className={styles['files-close']} title={'Закрити'} onClick={(event) => { event.preventDefault(); onClose(); }}>
+                                        <Icon className={styles['files-close-icon']} name={'close'} />
+                                    </Button>
+                                </div>
+                                <FilesList state={state} onClose={onClose} />
+                            </div>
+                        </div>,
+                        document.body
+                    )
                     :
                     null
             }
