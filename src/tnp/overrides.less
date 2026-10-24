@@ -48,3 +48,31 @@
     color: #ffffff;
     filter: drop-shadow(0 0 0.3rem rgba(0, 0, 0, 0.8));
 }
+
+// Карточка ТВ-канала: программа передач — на всё место под шапкой канала (оператор 25.10). У Stremio шапка
+// занимает остаток экрана (1fr) и стоит по центру, а программа — фиксированные 10rem внизу: над ней пустота,
+// в списке видно ~2 передачи. Меняем местами: шапка по содержимому, программа растёт до низа (не меньше 10rem).
+// ПК и телефон вертикально; телефон горизонтально — их две колонки, не трогаем. Двойной селектор — перебить их правило.
+@media (min-width: (@xsmall + 1px)) and (min-height: 600px), (max-width: @xsmall) and (orientation: portrait) {
+    :global([class*="channel-page-"][class*="channel-page-"]) {
+        grid-template-rows: min-content minmax(0, 1fr);
+    }
+
+    :global([class*="channel-page-"] > [class*="guide-layout-"]) {
+        display: grid;
+        min-height: 13rem;
+    }
+
+    :global([class*="guide-layout-"] > [class*="schedule-"]) {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+    }
+
+    :global([class*="guide-layout-"] [class*="schedule-"] > [class*="agenda-"]),
+    :global([class*="guide-layout-"] [class*="schedule-"] > [class*="viewport-"]) {
+        flex: 1 1 auto;
+        height: auto;
+        min-height: 10rem;
+    }
+}
