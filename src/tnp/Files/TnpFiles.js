@@ -17,12 +17,6 @@ const styles = require('./styles');
 const FILES_PURPOSE = 'purpose=files';
 const isAndroid = () => /Android/i.test(navigator.userAgent);
 
-const formatSize = (bytes) => {
-    if (!bytes) return '';
-    const gb = bytes / (1024 * 1024 * 1024);
-    return gb >= 1 ? `${gb.toFixed(2)} ГБ` : `${Math.max(1, Math.round(bytes / (1024 * 1024)))} МБ`;
-};
-
 // плёнка с треугольником «play»: не загрузка и не плеер — «файлы, которые можно смотреть»
 const FilesIcon = ({ className }) => (
     <svg className={className} viewBox={'0 0 24 24'} fill={'none'} stroke={'currentColor'} strokeWidth={'1.8'} strokeLinecap={'round'} strokeLinejoin={'round'} aria-hidden={'true'}>
@@ -144,7 +138,6 @@ const FilesList = ({ state, onClose }) => {
                         <div className={styles['file-info']}>
                             <div className={styles['file-name']}>{s.name}</div>
                             <div className={styles['file-description']}>{s.description || s.title || ''}</div>
-                            {s.behaviorHints && s.behaviorHints.videoSize ? <div className={styles['file-size']}>{formatSize(s.behaviorHints.videoSize)}</div> : null}
                         </div>
                         <div className={styles['file-actions']}>
                             <StreamDownload
