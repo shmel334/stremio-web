@@ -61,5 +61,5 @@ root.render(
     </React.StrictMode>
 );
 
-// TnP: проба видео браузера (src/tnp/videoCaps.js), за флагом
-require('./tnp/flags').videoCaps && require('./tnp/videoCaps').schedule();
+// TnP: проба видео браузера (src/tnp/videoCaps.js), за флагом; ?tnpcaps=1 — разовый ручной прогон
+(require('./tnp/flags').videoCaps || /[?&]tnpcaps=1/.test(window.location.search)) && require('./tnp/videoCaps').schedule(/[?&]tnpcaps=1/.test(window.location.search));

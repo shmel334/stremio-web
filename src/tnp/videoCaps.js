@@ -323,7 +323,8 @@ async function run(opts) {
 const playing = () => Array.prototype.some.call(document.querySelectorAll('video'), (v) => !v.paused && !v.ended);
 
 // Запуск из приложения: не раньше чем через 10 с после загрузки, в простое, не во время просмотра.
-function schedule() {
+// force — ручной прогон (?tnpcaps=1): без проверки отпечатка, через 3 с.
+function schedule(force) {
     const attempt = (left) => {
         if (left <= 0) {
             return;
@@ -332,12 +333,12 @@ function schedule() {
             setTimeout(() => attempt(left - 1), 60000);
             return;
         }
-        run().catch((e) => console.warn('TnP: video caps', e));
+        run({ force: !!force }).catch((e) => console.warn('TnP: video caps', e));
     };
     setTimeout(() => {
         const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 0));
         idle(() => attempt(10));
-    }, 10000);
+    }, force ? 3000 : 10000);
 }
 
 module.exports = { run, schedule, derive, PROBE_VERSION };
