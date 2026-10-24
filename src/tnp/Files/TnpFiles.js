@@ -8,6 +8,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { useFilesMode, toggle } = require('./filesMode');
+const OpenWith = require('./openWith');
 const styles = require('./styles');
 
 const TnpFiles = ({ className }) => {
@@ -46,7 +47,6 @@ const FilesModeBar = () => {
 };
 
 const noop = () => undefined;
-const isAndroid = () => /Android/i.test(navigator.userAgent);
 
 // строка файла в режиме: слева «Скачати» и «Відкрити з…», справа описание со ссылкой на плеер веба.
 // Кнопки — вне ссылки строки, поэтому их нажатие не запускает плеер.
@@ -54,24 +54,25 @@ const FileRow = ({ stream, videoId }) => {
     // лениво: оба модуля тянут stremio/components / stremio/common (кольцо при загрузке модуля)
     const { default: Button } = require('stremio/components/Button');
     const StreamDownload = require('stremio/tnp/StreamDownload');
-    const { useToast } = require('stremio/common');
+    const { useToast, usePlatform, useProfile } = require('stremio/common');
     const streamStyles = require('stremio/routes/MetaDetails/StreamsList/Stream/styles');
     const toast = useToast();
+    const platform = usePlatform();
+    const profile = useProfile();
+    const [chooser, setChooser] = React.useState(false);
 
     const openWith = React.useCallback((event) => {
         event.preventDefault();
-        if (isAndroid()) {
-            const u = new URL(stream.url);
-            window.location.href = `intent://${u.host}${u.pathname}${u.search}#Intent;scheme=${u.protocol.replace(':', '')};type=video/*;end`;
-            return;
-        }
-        const done = () => toast.show({ type: 'success', title: 'Посилання скопійовано — відкрийте його у VLC або mpv («Відкрити URL»)', timeout: 6000 });
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(stream.url).then(done).catch(() => window.prompt('Посилання для плеєра', stream.url));
-        } else {
-            window.prompt('Посилання для плеєра', stream.url);
-        }
-    }, [stream.url, toast]);
+        const configured = OpenWith.configuredLink(stream.url, platform.name, profile.settings.playerType);
+        if (configured) return OpenWith.go(configured);
+        if (platform.name === 'android') return OpenWith.go(OpenWith.intentLink(stream.url));
+        if (OpenWith.isIos(platform.name)) return setChooser((open) => !open);
+        // ПК: .m3u откроет плеер по умолчанию в системе; ссылка ещё и в буфере — на случай, если плеера нет
+        OpenWith.downloadM3u(stream.url, stream.behaviorHints && stream.behaviorHints.filename);
+        const done = () => toast.show({ type: 'success', title: 'Відкрийте playlist.m3u — запуститься ваш плеєр за замовчуванням. Посилання також скопійовано', timeout: 7000 });
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(stream.url).then(done).catch(done);
+        else done();
+    }, [stream.url, stream.behaviorHints, platform.name, profile.settings.playerType, toast]);
 
     return (
         <div className={styles['file-row']}>
@@ -87,6 +88,18 @@ const FileRow = ({ stream, videoId }) => {
                 <Icon className={styles['file-action-icon']} name={'play'} />
                 <div className={styles['file-action-label']}>Відкрити з…</div>
             </Button>
+            {
+                chooser ?
+                    <div className={styles['players']}>
+                        {OpenWith.IOS_PLAYERS.map((player) => (
+                            <Button key={player.value} className={styles['player']} title={player.label} onClick={(event) => { event.preventDefault(); OpenWith.go(player.link(stream.url)); }}>
+                                {player.label}
+                            </Button>
+                        ))}
+                    </div>
+                    :
+                    null
+            }
             <Button className={classnames(streamStyles['stream-container'], styles['file-link'])} title={stream.description} href={stream.deepLinks.player} onClick={stream.onClick}>
                 <div className={streamStyles['description-container']}>{stream.description}</div>
                 <Icon className={streamStyles['icon']} name={'play'} />

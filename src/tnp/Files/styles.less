@@ -99,8 +99,35 @@
     }
 
     // серии пака (StreamDownload) — третьей строкой на всю ширину
-    > :not(.file-action):not(.file-link) {
+    > :not(.file-action):not(.file-link):not(.players) {
         grid-column: 1 / -1;
         grid-row: 3;
+    }
+
+    > .players {
+        grid-column: 1 / -1;
+        grid-row: 4;
+    }
+}
+
+// iOS без настройки «Зовнішній плеєр»: выбор плеера под строкой
+.players {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.25rem 0.5rem 0.5rem 0;
+
+    .player {
+        padding: 0.45rem 1rem;
+        border-radius: 2rem;
+        background-color: var(--overlay-color);
+        color: var(--primary-foreground-color);
+        font-size: 0.9rem;
+        font-weight: 600;
+
+        &:hover,
+        &:focus {
+            background-color: #6366f1;
+        }
     }
 }
