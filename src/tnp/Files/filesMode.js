@@ -86,7 +86,7 @@ const useFilesStreams = (streams, core) => {
         setFiles({ url, content: { type: 'Loading' } });
         fetchFiles(url)
             .then((items) => Promise.all(items.map((stream) => core.transport.encodeStream(stream)
-                .then((encoded) => ({ ...stream, deepLinks: { player: withPlayerLink(template, encoded) } })))))
+                .then((encoded) => ({ ...stream, tnpFile: true, deepLinks: { player: withPlayerLink(template, encoded) } })))))
             .then((content) => !cancelled && setFiles({ url, content: { type: 'Ready', content } }))
             .catch(() => !cancelled && setFiles({ url, content: { type: 'Err', content: 'files' } }));
         return () => { cancelled = true; };

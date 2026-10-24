@@ -40,3 +40,67 @@
         cursor: pointer;
     }
 }
+
+// строка файла: слева две кнопки столбиком, справа описание (ссылка на плеер), серии пака — под всей строкой
+.file-row {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    column-gap: 0.5rem;
+    row-gap: 0.4rem;
+    margin-bottom: 0.75rem;
+    padding: 0.4rem 0 0.4rem 0.5rem;
+    border-radius: var(--border-radius);
+    background-color: rgba(255, 255, 255, 0.03);
+
+    .file-action {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.25rem;
+        padding: 0.45rem 0.25rem;
+        border-radius: 0.6rem;
+        background-color: var(--overlay-color);
+        color: var(--primary-foreground-color);
+
+        &:hover,
+        &:focus {
+            background-color: #6366f1;
+        }
+    }
+
+    .file-download {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .file-open {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    .file-action-icon {
+        width: 1.4rem;
+        height: 1.4rem;
+        color: var(--primary-foreground-color);
+    }
+
+    .file-action-label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-align: center;
+        line-height: 1.1;
+    }
+
+    .file-link {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        margin-bottom: 0;
+    }
+
+    // серии пака (StreamDownload) — третьей строкой на всю ширину
+    > :not(.file-action):not(.file-link) {
+        grid-column: 1 / -1;
+        grid-row: 3;
+    }
+}

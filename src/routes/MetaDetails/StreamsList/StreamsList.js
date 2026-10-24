@@ -10,10 +10,10 @@ const { useTranslation } = require('react-i18next');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Button, Image, MultiselectMenu } = require('stremio/components');
 const { useCore } = require('stremio/core');
-const Stream = require('./Stream');
 const styles = require('./styles');
 const TNP = require('stremio/tnp/flags');
 const TnpFiles = TNP.tnpFiles ? require('stremio/tnp/Files') : null; // TnP: режим «все файлы» подменяет выдачу нашего аддона
+const Stream = TnpFiles ? TnpFiles.withFileRow(require('./Stream')) : require('./Stream'); // TnP: строка файла в режиме
 const useTnpFilesStreams = TnpFiles ? TnpFiles.useFilesStreams : (streams) => streams;
 const { usePlatform, useProfile } = require('stremio/common');
 const { default: SeasonEpisodePicker } = require('../EpisodePicker');

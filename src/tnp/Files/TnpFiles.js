@@ -1,10 +1,12 @@
-// TnP: кнопка «все файлы» в ряду действий тайтла (оператор 25.10) — иконка скачивания размером с соседние.
+// TnP: кнопка «Скачати» в ряду действий тайтла (оператор 25.10) — иконка скачивания, высота как у соседних.
 // Нажатие переключает режим выдачи (filesMode.js): список стримов на странице показывает от нашего аддона
 // все файлы без подстройки под устройство и без фильтра по каналу. Повторное нажатие возвращает обычную выдачу.
+// В режиме у каждого файла слева две кнопки без зажатия: «Скачати» (пак — серии под строкой) и «Відкрити з…».
 
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
+const { default: Icon } = require('@stremio/stremio-icons/react');
 const { useFilesMode, toggle } = require('./filesMode');
 const styles = require('./styles');
 
@@ -16,13 +18,13 @@ const TnpFiles = ({ className }) => {
         event.preventDefault();
         toggle();
     }, []);
-    const label = active ? 'Звичайна видача' : 'Усі файли: без фільтрів, для скачування';
     return (
         <ActionButton
             className={classnames(className, styles['files-button'], { [styles['active']]: active })}
             icon={'download'}
-            label={label}
-            tooltip={true}
+            label={'Скачати'}
+            title={active ? 'Повернути звичайну видачу' : 'Усі файли без фільтрів: скачати або відкрити у своєму плеєрі'}
+            variant={'wide'}
             tabIndex={0}
             onClick={onClick}
         />
@@ -43,6 +45,70 @@ const FilesModeBar = () => {
     );
 };
 
+const noop = () => undefined;
+const isAndroid = () => /Android/i.test(navigator.userAgent);
+
+// строка файла в режиме: слева «Скачати» и «Відкрити з…», справа описание со ссылкой на плеер веба.
+// Кнопки — вне ссылки строки, поэтому их нажатие не запускает плеер.
+const FileRow = ({ stream, videoId }) => {
+    // лениво: оба модуля тянут stremio/components / stremio/common (кольцо при загрузке модуля)
+    const { default: Button } = require('stremio/components/Button');
+    const StreamDownload = require('stremio/tnp/StreamDownload');
+    const { useToast } = require('stremio/common');
+    const streamStyles = require('stremio/routes/MetaDetails/StreamsList/Stream/styles');
+    const toast = useToast();
+
+    const openWith = React.useCallback((event) => {
+        event.preventDefault();
+        if (isAndroid()) {
+            const u = new URL(stream.url);
+            window.location.href = `intent://${u.host}${u.pathname}${u.search}#Intent;scheme=${u.protocol.replace(':', '')};type=video/*;end`;
+            return;
+        }
+        const done = () => toast.show({ type: 'success', title: 'Посилання скопійовано — відкрийте його у VLC або mpv («Відкрити URL»)', timeout: 6000 });
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(stream.url).then(done).catch(() => window.prompt('Посилання для плеєра', stream.url));
+        } else {
+            window.prompt('Посилання для плеєра', stream.url);
+        }
+    }, [stream.url, toast]);
+
+    return (
+        <div className={styles['file-row']}>
+            <StreamDownload
+                stream={stream}
+                videoId={videoId}
+                optionClassName={classnames(styles['file-action'], styles['file-download'])}
+                iconClassName={styles['file-action-icon']}
+                labelClassName={styles['file-action-label']}
+                closeMenu={noop}
+            />
+            <Button className={classnames(styles['file-action'], styles['file-open'])} title={'Відкрити за допомогою іншого плеєра'} onClick={openWith}>
+                <Icon className={styles['file-action-icon']} name={'play'} />
+                <div className={styles['file-action-label']}>Відкрити з…</div>
+            </Button>
+            <Button className={classnames(streamStyles['stream-container'], styles['file-link'])} title={stream.description} href={stream.deepLinks.player} onClick={stream.onClick}>
+                <div className={streamStyles['description-container']}>{stream.description}</div>
+                <Icon className={streamStyles['icon']} name={'play'} />
+            </Button>
+        </div>
+    );
+};
+
+FileRow.propTypes = { stream: PropTypes.object, videoId: PropTypes.string };
+
+// обёртка над строкой стрима Stremio: файл режима (tnpFile) — своя строка, остальное — их Stream как есть
+const withFileRow = (Stream) => {
+    const StreamOrFile = (props) => props.tnpStream && props.tnpStream.tnpFile ?
+        <FileRow stream={props.tnpStream} videoId={props.videoId} />
+        :
+        <Stream {...props} />;
+    StreamOrFile.propTypes = { tnpStream: PropTypes.object, videoId: PropTypes.string };
+    StreamOrFile.Placeholder = Stream.Placeholder;
+    return StreamOrFile;
+};
+
 module.exports = TnpFiles;
+module.exports.withFileRow = withFileRow;
 module.exports.FilesModeBar = FilesModeBar;
 module.exports.useFilesStreams = require('./filesMode').useFilesStreams;
