@@ -1,0 +1,131 @@
+// TnP: кнопка «Файли» в ряду действий тайтла и окно со списком файлов
+
+@import (reference) '~stremio/common/screen-sizes.less';
+
+// крупнее соседних кнопок и в цвет бренда — должна бросаться в глаза (оператор 25.10)
+.files-button {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    height: 4rem;
+    padding: 0 1.5rem 0 1.1rem;
+    border-radius: 2rem;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    box-shadow: 0 0.35rem 1.25rem rgba(99, 102, 241, 0.45);
+    color: #ffffff;
+
+    &:hover,
+    &:focus {
+        filter: brightness(1.1);
+    }
+
+    .files-icon {
+        flex: none;
+        width: 2.2rem;
+        height: 2.2rem;
+    }
+
+    .files-label {
+        font-size: 1.1rem;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+}
+
+.files-modal {
+    width: min(48rem, 94vw);
+    max-height: 86vh;
+}
+
+.note {
+    padding: 0.5rem 0;
+    font-size: 0.95rem;
+    opacity: 0.75;
+}
+
+.files-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    max-height: 68vh;
+    overflow-y: auto;
+    padding-right: 0.25rem;
+}
+
+.file {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 0.8rem 1rem;
+    border-radius: var(--border-radius);
+    background-color: var(--overlay-color);
+
+    .file-info {
+        min-width: 0;
+    }
+
+    .file-name {
+        font-size: 0.95rem;
+        font-weight: 600;
+        white-space: pre-line;
+    }
+
+    .file-description {
+        margin-top: 0.25rem;
+        font-size: 0.85rem;
+        opacity: 0.8;
+        white-space: pre-line;
+        overflow-wrap: anywhere;
+    }
+
+    .file-size {
+        margin-top: 0.25rem;
+        font-size: 0.85rem;
+        opacity: 0.7;
+    }
+
+    .file-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .file-action {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        color: var(--primary-foreground-color);
+
+        &:hover,
+        &:focus {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .file-action-icon {
+            flex: none;
+            width: 1.2rem;
+            height: 1.2rem;
+            color: var(--primary-foreground-color);
+        }
+
+        .file-action-label {
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+    }
+}
+
+@media only screen and (max-width: @minimum) {
+    .files-button {
+        height: 3.4rem;
+        padding: 0 1.1rem 0 0.9rem;
+
+        .files-icon {
+            width: 1.8rem;
+            height: 1.8rem;
+        }
+    }
+}

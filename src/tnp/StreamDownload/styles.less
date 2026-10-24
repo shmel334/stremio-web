@@ -1,6 +1,8 @@
-// TnP: панель «Скачати пак» внутри меню стрима
+// TnP: серии пак-торрента внутри меню стрима («Скачати» на строке пака)
 
 .pack {
+    // в окне «Файли» панель стоит в ряду кнопок файла — на всю ширину, под ними
+    flex-basis: 100%;
     padding: 0.5rem 1.5rem 1rem;
     border-top: 1px solid var(--color-placeholder);
     color: var(--primary-foreground-color);
@@ -18,6 +20,35 @@
             background-color: var(--overlay-color);
 
             &.active {
+                background-color: #6366f1;
+            }
+        }
+    }
+
+    .all {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.2rem 0 0.6rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+
+        .check {
+            flex: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.2rem;
+            height: 1.2rem;
+            border-radius: 0.3rem;
+            border: 2px solid rgba(255, 255, 255, 0.35);
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #ffffff;
+
+            &.checked {
+                border-color: #6366f1;
                 background-color: #6366f1;
             }
         }

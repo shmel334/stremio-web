@@ -22,6 +22,7 @@ const MetaPreviewPlaceholder = require('./MetaPreviewPlaceholder');
 const styles = require('./styles');
 const TNP = require('stremio/tnp/flags');
 const Ratings = TNP.tnpRatings ? require('stremio/tnp/Ratings') : require('./Ratings').Ratings;
+const TnpFiles = TNP.tnpFiles ? require('stremio/tnp/Files') : null; // TnP: «Файли» — все файлы, скачать / открыть у плеєрі
 
 const ALLOWED_LINK_REDIRECTS = [
     routesRegexp.search.regexp,
@@ -228,6 +229,7 @@ const MetaPreview = React.forwardRef(({ className, compact, name, logo, backgrou
                             :
                             null
                     }
+                    {TnpFiles && !compact ? <TnpFiles className={styles['action-button']} /> : null}
                     {
                         typeof toggleInLibrary === 'function' && typeof toggleWatched === 'function'
                             ? <ActionsGroup items={metaItemActions} className={styles['group-container']} />
