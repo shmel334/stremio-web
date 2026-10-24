@@ -1,7 +1,7 @@
 // TnP: «Скачати» в меню стрима (вместо «Copy video download link»).
 // Скачивание — наш конвейер TnP (/api/traffic/download/web/*: Хаб называет файл по ссылке строки,
 // дальше те же проверки трафика, нода и учёт, что из ЛК).
-// Пак-торрент (bingeGroup `|pack|<hash>|`, оператор 25.10): «Скачати» раскрывает серии пака — состав от Хаба
+// Пак-торрент (оператор 25.10): у серии «Скачати» раскрывает серии пака, если их в пуле больше одной — состав от Хаба
 // (/download/web/pack → getPackFiles, тот же отбор, что у выдачи), отмечена текущая серия, «Усі» — весь пак.
 // Перед стартом — проверка всей выборки против остатка трафика (POST /download/web/check), стартуют только
 // прошедшие. Одиночная серия качается сразу. Отдельной кнопки «Скачати пак» и поиска серий по выдаче больше нет.
@@ -48,12 +48,13 @@ const checkPack = (items) => fetch(CHECK_URL, {
 const StreamDownload = ({ stream, videoId, optionClassName, iconClassName, labelClassName, closeMenu }) => {
     const toast = useToast();
     const url = stream && stream.url;
-    const bingeGroup = stream && stream.behaviorHints ? stream.behaviorHints.bingeGroup : null;
     const idParts = typeof videoId === 'string' ? videoId.split(':') : [];
     const isEpisode = idParts.length >= 3;
     const currentSeason = isEpisode ? Number(idParts[idParts.length - 2]) : null;
     const currentEpisode = isEpisode ? Number(idParts[idParts.length - 1]) : null;
-    const isPack = isEpisode && typeof bingeGroup === 'string' && bingeGroup.indexOf('|pack|') !== -1;
+    // Пак ли это, решает Хаб по пулу (/download/web/pack → getPackFiles): bingeGroup с 18.10 несёт ключ
+    // линии озвучки (`bl|…`), а не `|pack|`, по нему пак не узнать. У серии «Скачати» сперва спрашивает состав.
+    const isPack = isEpisode;
 
     const [packOpen, setPackOpen] = React.useState(false);
     const [seasons, setSeasons] = React.useState([]);
@@ -161,7 +162,7 @@ const StreamDownload = ({ stream, videoId, optionClassName, iconClassName, label
     const current = episodes[season] || { loading: true, items: [] };
     return (
         <React.Fragment>
-            <Button className={optionClassName} title={isPack ? 'Скачати: серії пака' : 'Скачати'} onClick={onDownload}>
+            <Button className={optionClassName} title={'Скачати'} onClick={onDownload}>
                 <Icon className={iconClassName} name={'download'} />
                 <div className={labelClassName}>{busy && !packOpen ? 'Перевіряю…' : 'Скачати'}</div>
             </Button>
