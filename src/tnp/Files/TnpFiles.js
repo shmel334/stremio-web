@@ -63,15 +63,16 @@ const FileRow = ({ stream, videoId }) => {
 
     const openWith = React.useCallback((event) => {
         event.preventDefault();
+        // ссылка на трансляцию — в буфер всегда (2в1 с открытием): если плеер не откроется, её можно вставить руками
+        const copied = navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText(stream.url) : Promise.reject();
+        copied.catch(() => undefined);
         const configured = OpenWith.configuredLink(stream.url, platform.name, profile.settings.playerType);
         if (configured) return OpenWith.go(configured);
         if (platform.name === 'android') return OpenWith.go(OpenWith.intentLink(stream.url));
         if (OpenWith.isIos(platform.name)) return setChooser((open) => !open);
         // ПК: .m3u откроет плеер по умолчанию в системе; ссылка ещё и в буфере — на случай, если плеера нет
         OpenWith.downloadM3u(stream.url, stream.behaviorHints && stream.behaviorHints.filename);
-        const done = () => toast.show({ type: 'success', title: 'Відкрийте playlist.m3u — запуститься ваш плеєр за замовчуванням. Посилання також скопійовано', timeout: 7000 });
-        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(stream.url).then(done).catch(done);
-        else done();
+        toast.show({ type: 'success', title: 'Відкрийте playlist.m3u — запуститься ваш плеєр за замовчуванням. Посилання також скопійовано', timeout: 7000 });
     }, [stream.url, stream.behaviorHints, platform.name, profile.settings.playerType, toast]);
 
     return (
