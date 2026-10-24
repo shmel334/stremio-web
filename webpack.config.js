@@ -230,6 +230,7 @@ module.exports = (env, argv) => ({
         argv.mode === 'production' &&
             new WorkboxPlugin.GenerateSW({
                 maximumFileSizeToCacheInBytes: 20000000,
+                exclude: [/\.map$/, /^manifest.*\.js$/, /^tnp-probe\//], // TnP: ролики пробы видео (src/tnp/videoCaps.js) не в прекеш
                 clientsClaim: true,
                 skipWaiting: false
             }),
@@ -240,6 +241,7 @@ module.exports = (env, argv) => ({
                 { from: 'assets/screenshots/*.webp', to: 'screenshots/[name][ext]' },
                 { from: '.well-known', to: '.well-known' },
                 { from: 'manifest.json', to: 'manifest.json' },
+                { from: 'tnp/probe-media', to: 'tnp-probe' }, // TnP: ролики пробы видео браузера
             ]
         }),
         new MiniCssExtractPlugin({

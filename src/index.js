@@ -60,3 +60,6 @@ root.render(
         </PlatformProvider>
     </React.StrictMode>
 );
+
+// TnP: проба видео браузера (src/tnp/videoCaps.js), за флагом
+require('./tnp/flags').videoCaps && require('./tnp/videoCaps').schedule();

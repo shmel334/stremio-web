@@ -27,4 +27,7 @@ module.exports = {
     copyDownloadLink: false,
     // кнопка «все файлы» в ряду действий тайтла: выдача нашего аддона в режиме «тул» на той же странице (src/tnp/Files)
     tnpFiles: true,
+    // проба видео браузера (src/tnp/videoCaps.js): что он реально играет → ЛК → Хаб. Выкл., пока нет приёмника
+    // POST /api/user/video-caps: без него проба повторялась бы на каждом заходе (~0.8 МБ роликов)
+    videoCaps: false,
 };
