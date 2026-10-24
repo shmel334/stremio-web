@@ -22,7 +22,7 @@ const MetaPreviewPlaceholder = require('./MetaPreviewPlaceholder');
 const styles = require('./styles');
 const TNP = require('stremio/tnp/flags');
 const Ratings = TNP.tnpRatings ? require('stremio/tnp/Ratings') : require('./Ratings').Ratings;
-const TnpFiles = TNP.tnpFiles ? require('stremio/tnp/Files') : null; // TnP: «Файли» — все файлы, скачать / открыть у плеєрі
+const TnpFiles = TNP.tnpFiles ? require('stremio/tnp/Files') : null; // TnP: «все файлы» — выдача без фильтров
 
 const ALLOWED_LINK_REDIRECTS = [
     routesRegexp.search.regexp,

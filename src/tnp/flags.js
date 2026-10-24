@@ -25,6 +25,6 @@ module.exports = {
     tnpRatings: true,
     // «Copy video download link» в меню стрима — вместо него «Скачати» (у пака — серии) (src/tnp/StreamDownload)
     copyDownloadLink: false,
-    // «Файли» в ряду действий тайтла: все файлы в режиме «тул», скачать / открыть у своєму плеєрі (src/tnp/Files)
+    // кнопка «все файлы» в ряду действий тайтла: выдача нашего аддона в режиме «тул» на той же странице (src/tnp/Files)
     tnpFiles: true,
 };

@@ -13,6 +13,8 @@ const { useCore } = require('stremio/core');
 const Stream = require('./Stream');
 const styles = require('./styles');
 const TNP = require('stremio/tnp/flags');
+const TnpFiles = TNP.tnpFiles ? require('stremio/tnp/Files') : null; // TnP: режим «все файлы» подменяет выдачу нашего аддона
+const useTnpFilesStreams = TnpFiles ? TnpFiles.useFilesStreams : (streams) => streams;
 const { usePlatform, useProfile } = require('stremio/common');
 const { default: SeasonEpisodePicker } = require('../EpisodePicker');
 
@@ -25,6 +27,7 @@ const StreamsList = ({ className, video, type, externalPlayerCallbackCanMarkWatc
     const profile = useProfile();
     const navigate = useNavigate();
     const goBack = useGoBack();
+    props = { ...props, streams: useTnpFilesStreams(props.streams, core) };
     const streamsContainerRef = React.useRef(null);
     const [selectedAddon, setSelectedAddon] = React.useState(ALL_ADDONS_KEY);
     const onAddonSelected = React.useCallback((value) => {
@@ -139,6 +142,7 @@ const StreamsList = ({ className, video, type, externalPlayerCallbackCanMarkWatc
                         null
                 }
             </div>
+            {TnpFiles ? <TnpFiles.FilesModeBar /> : null}
             {
                 props.streams.length === 0 ?
                     <div className={styles['message-container']}>
