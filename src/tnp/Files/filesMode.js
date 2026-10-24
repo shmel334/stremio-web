@@ -1,7 +1,7 @@
 // TnP: режим «все файлы» для выдачи тайтла (оператор 25.10). Кнопка в ряду действий включает режим,
 // список стримов на той же странице подменяет выдачу нашего аддона на ?purpose=files — без подстройки под
 // устройство и без фильтра по каналу. Остальные аддоны и всё поведение строки (клик, меню по зажатию,
-// «Скачати» с паком) — штатные. Режим держится за тайтл (#/detail/<type>/<id>) и гаснет на другом тайтле.
+// «Скачати» с паком) — штатные. Режим держится за тайтл (#/detail/<type>/<id>), гаснет на другом тайтле и переживает перезагрузку вкладки.
 
 const React = require('react');
 
@@ -12,7 +12,19 @@ const titleKey = () => {
     return match ? `${match[1]}/${match[2]}` : null;
 };
 
-let activeTitle = null;
+// режим переживает перезагрузку вкладки (sessionStorage), но не уходит в другие вкладки
+const STORE_KEY = 'tnp:filesMode';
+const readStored = () => {
+    try { return window.sessionStorage.getItem(STORE_KEY); } catch (_e) { return null; }
+};
+const writeStored = (value) => {
+    try {
+        if (value) window.sessionStorage.setItem(STORE_KEY, value);
+        else window.sessionStorage.removeItem(STORE_KEY);
+    } catch (_e) { /* без хранилища режим живёт до перезагрузки */ }
+};
+
+let activeTitle = readStored();
 const listeners = new Set();
 const emit = () => listeners.forEach((listener) => listener());
 
@@ -20,6 +32,7 @@ const isActive = () => activeTitle !== null && activeTitle === titleKey();
 
 const toggle = () => {
     activeTitle = isActive() ? null : titleKey();
+    writeStored(activeTitle);
     emit();
 };
 
