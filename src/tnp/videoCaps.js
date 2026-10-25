@@ -57,7 +57,7 @@ async function collectClient() {
     let uaData = null;
     if (nav.userAgentData) {
         uaData = { brands: nav.userAgentData.brands, mobile: nav.userAgentData.mobile, platform: nav.userAgentData.platform };
-        const high = await safe(() => nav.userAgentData.getHighEntropyValues(['fullVersionList', 'platformVersion', 'model']), null);
+        const high = safe(() => nav.userAgentData.getHighEntropyValues(['fullVersionList', 'platformVersion', 'model']), null);
         if (high) {
             Object.assign(uaData, await high.catch(() => ({})));
         }
