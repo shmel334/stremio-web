@@ -15,7 +15,7 @@ let cur = null;
 const safe = (fn, dflt) => {
     try {
         return fn();
-    } catch (e) {
+    } catch (_e) {
         return dflt;
     }
 };
@@ -72,7 +72,7 @@ function send(kind, extra) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
         keepalive: true,
-    }).catch(() => {}));
+    }).catch(() => null));
 }
 
 function stop() {
