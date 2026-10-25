@@ -8,6 +8,7 @@
 const STALL_MS = 20000;
 const POLL_MS = 1000;
 const MAX_EVENTS = 5;
+const TRAIL_MAX = 40;
 const POST = '/api/user/player-event';
 
 let cur = null;
@@ -19,6 +20,53 @@ const safe = (fn, dflt) => {
         return dflt;
     }
 };
+
+// Хронология с загрузки потока: создание/удаление SourceBuffer (с mime), жизнь MediaSource, запросы
+// плеера (только имя файла), события <video>. hls.js живёт внутри stremio-video и снаружи недоступен,
+// поэтому смотрим на уровень ниже — MSE и XHR. Уходит с ошибкой в state.trail.
+let trail = [];
+function mark(k, d) {
+    if (!cur) return;
+    trail.push(d === undefined ? [Date.now() - cur.at, k] : [Date.now() - cur.at, k, String(d).slice(0, 80)]);
+    if (trail.length > TRAIL_MAX) trail.shift();
+}
+const fileOf = (u) => safe(() => new URL(String(u), location.href).pathname.split('/').pop().slice(0, 40), '?');
+
+safe(() => {
+    const MS = window.MediaSource;
+    if (MS && MS.prototype) {
+        const add = MS.prototype.addSourceBuffer;
+        MS.prototype.addSourceBuffer = function(mime) {
+            mark('addSB', mime);
+            try {
+                return add.apply(this, arguments);
+            } catch (err) {
+                mark('addSB!', err && err.name);
+                throw err;
+            }
+        };
+        const rm = MS.prototype.removeSourceBuffer;
+        MS.prototype.removeSourceBuffer = function() {
+            mark('rmSB');
+            return rm.apply(this, arguments);
+        };
+        const eos = MS.prototype.endOfStream;
+        MS.prototype.endOfStream = function(reason) {
+            mark('eos', reason || '');
+            return eos.apply(this, arguments);
+        };
+    }
+    const open = XMLHttpRequest.prototype.open;
+    XMLHttpRequest.prototype.open = function(method, url) {
+        mark('xhr', fileOf(url));
+        return open.apply(this, arguments);
+    };
+    const mev = ['emptied', 'loadstart', 'loadedmetadata', 'canplay', 'playing', 'waiting', 'seeking', 'seeked', 'pause', 'error'];
+    document.addEventListener('play', (e) => e.target instanceof HTMLVideoElement && mark('play'), true);
+    for (const n of mev) document.addEventListener(n, (e) => {
+        if (e.target instanceof HTMLVideoElement) mark(n, n === 'seeking' ? e.target.currentTime.toFixed(1) : undefined);
+    }, true);
+});
 
 function videoState() {
     const v = document.querySelector('video');
@@ -63,7 +111,7 @@ function send(kind, extra) {
         kind,
         url: cur.url,
         since_load_ms: Date.now() - cur.at,
-        state: safe(videoState, null),
+        state: Object.assign(safe(videoState, null) || {}, { trail: trail.slice() }),
         at: Date.now(),
     }, extra);
     safe(() => fetch(POST, {
@@ -85,6 +133,7 @@ function load(url) {
     cur = null;
     if (typeof url !== 'string' || !url) return;
     cur = { url: url.slice(0, 2000), at: Date.now(), n: 0, t0: null, started: false, errored: false, timer: null };
+    trail = [];
     cur.timer = setInterval(() => {
         if (!cur) return;
         const v = document.querySelector('video');
