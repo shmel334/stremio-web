@@ -8,7 +8,7 @@
 const STALL_MS = 20000;
 const POLL_MS = 1000;
 const MAX_EVENTS = 5;
-const TRAIL_MAX = 40;
+const TRAIL_MAX = 90;
 const POST = '/api/user/player-event';
 
 let cur = null;
@@ -58,9 +58,43 @@ safe(() => {
     }
     const open = XMLHttpRequest.prototype.open;
     XMLHttpRequest.prototype.open = function(method, url) {
-        mark('xhr', fileOf(url));
+        const f = fileOf(url);
+        mark('xhr', f);
+        if (!this.__tnpTrail) {
+            this.__tnpTrail = true;
+            this.addEventListener('loadend', () => mark('xhr<', f + ' ' + this.status));
+        }
         return open.apply(this, arguments);
     };
+    const abort = XMLHttpRequest.prototype.abort;
+    XMLHttpRequest.prototype.abort = function() {
+        mark('xhrAbort');
+        return abort.apply(this, arguments);
+    };
+    // Транмуксер hls.js в воркере: команды (reset/configure/demux/flush с номером сегмента) и ответы.
+    // По ним видно, обрабатывался ли сегмент дважды и сбрасывался ли транмуксер.
+    const W = window.Worker;
+    if (W && W.prototype) {
+        const meta = (m) => {
+            const c = m && (m.chunkMeta || (m.sn !== undefined ? m : null));
+            return c ? ` ${c.level}:${c.sn}` : '';
+        };
+        const post = W.prototype.postMessage;
+        W.prototype.postMessage = function(m) {
+            if (m && typeof m === 'object' && m.cmd) mark('w>', m.cmd + meta(m));
+            return post.apply(this, arguments);
+        };
+        const ael = W.prototype.addEventListener;
+        W.prototype.addEventListener = function(type, fn) {
+            if (type === 'message' && typeof fn === 'function') {
+                ael.call(this, 'message', (e) => {
+                    const d = e && e.data;
+                    if (d && typeof d === 'object' && d.event && d.event !== 'workerLog') mark('w<', d.event + meta(d.data || d));
+                });
+            }
+            return ael.apply(this, arguments);
+        };
+    }
     const mev = ['emptied', 'loadstart', 'loadedmetadata', 'canplay', 'playing', 'waiting', 'seeking', 'seeked', 'pause', 'error'];
     document.addEventListener('play', (e) => e.target instanceof HTMLVideoElement && mark('play'), true);
     for (const n of mev) document.addEventListener(n, (e) => {
