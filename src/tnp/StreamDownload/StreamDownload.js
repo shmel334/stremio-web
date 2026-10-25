@@ -1,8 +1,9 @@
 // TnP: «Скачати» в меню стрима (вместо «Copy video download link»).
 // Скачивание — наш конвейер TnP (/api/traffic/download/web/*: Хаб называет файл по ссылке строки,
 // дальше те же проверки трафика, нода и учёт, что из ЛК).
-// Пак-торрент (оператор 25.10): у серии «Скачати» раскрывает серии пака, если их в пуле больше одной — состав от Хаба
-// (/download/web/pack → getPackFiles, тот же отбор, что у выдачи), отмечена текущая серия, «Усі» — весь пак.
+// Пак (оператор 25.10): у серии «Скачати» раскрывает серии пака, если их в пуле больше одной — состав от Хаба
+// (/download/web/pack → getPackFiles: торрент-пак по хешу, сайтовый источник по CDN-группе — тот же отбор, что у
+// выдачи), отмечена текущая серия, «Усі» — весь пак. Серия качается по своей записи пула (poolId).
 // Перед стартом — проверка всей выборки против остатка трафика (POST /download/web/check), стартуют только
 // прошедшие. Одиночная серия качается сразу. Отдельной кнопки «Скачати пак» и поиска серий по выдаче больше нет.
 
@@ -24,11 +25,12 @@ const formatSize = (bytes) => {
     return gb >= 1 ? `${gb.toFixed(2)} ГБ` : `${Math.max(1, Math.round(bytes / (1024 * 1024)))} МБ`;
 };
 
-const startDownload = (url, fileIndex) => {
+const startDownload = (url, fileIndex, poolId) => {
     // скрытый фрейм: файл приходит вложением, страница веба остаётся на месте
     const frame = document.createElement('iframe');
     frame.style.display = 'none';
-    frame.src = STREAM_URL + encodeURIComponent(url) + (typeof fileIndex === 'number' ? `&fi=${fileIndex}` : '');
+    frame.src = STREAM_URL + encodeURIComponent(url) + (typeof fileIndex === 'number' ? `&fi=${fileIndex}` : '') +
+        (typeof poolId === 'number' ? `&pid=${poolId}` : '');
     document.body.appendChild(frame);
     setTimeout(() => frame.remove(), 120000);
 };
@@ -42,7 +44,7 @@ const checkPack = (items) => fetch(CHECK_URL, {
     method: 'POST',
     credentials: 'same-origin',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ items: items.map((item) => ({ url: item.url, fileIndex: item.fileIndex })) })
+    body: JSON.stringify({ items: items.map((item) => ({ url: item.url, fileIndex: item.fileIndex, poolId: item.poolId })) })
 }).then(asResult).catch(() => ({ ok: false, data: {} }));
 
 const StreamDownload = ({ stream, videoId, optionClassName, iconClassName, labelClassName, closeMenu }) => {
@@ -90,7 +92,8 @@ const StreamDownload = ({ stream, videoId, optionClassName, iconClassName, label
             .then((data) => {
                 const bySeason = {};
                 (Array.isArray(data.files) ? data.files : []).forEach((f) => {
-                    (bySeason[f.season] = bySeason[f.season] || []).push({ episode: f.episode, title: f.filename || '', url, fileIndex: f.fileIndex, size: f.size });
+                    // poolId — запись серии: у сайтового источника каждая серия — свой файл, не индекс в торренте
+                    (bySeason[f.season] = bySeason[f.season] || []).push({ episode: f.episode, title: f.filename || '', url, fileIndex: f.fileIndex, poolId: f.poolId, size: f.size });
                 });
                 const list = Object.keys(bySeason).map(Number).sort((a, b) => a - b);
                 // в пуле только эта серия — пака по факту нет, качаем её
@@ -147,7 +150,7 @@ const StreamDownload = ({ stream, videoId, optionClassName, iconClassName, label
             }
             const files = Array.isArray(data.files) ? data.files : [];
             const good = picked.filter((item, index) => files[index] && files[index].ok);
-            good.forEach((item, index) => setTimeout(() => startDownload(item.url, item.fileIndex), index * 1500));
+            good.forEach((item, index) => setTimeout(() => startDownload(item.url, item.fileIndex, item.poolId), index * 1500));
             const skipped = picked.length - good.length;
             toast.show({
                 type: good.length ? 'success' : 'error',
