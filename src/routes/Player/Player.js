@@ -28,6 +28,7 @@ const { default: AudioMenu } = require('./AudioMenu');
 const SpeedMenu = require('./SpeedMenu');
 const { default: SideDrawerButton } = require('./SideDrawerButton');
 const { default: SideDrawer } = require('./SideDrawer');
+const TNP_TELEMETRY = require('stremio/tnp/playerTelemetry'); // TnP: ошибки и зависания плеера → ЛК
 const usePlayer = require('./usePlayer');
 const { default: usePlayOnDevice } = require('./usePlayOnDevice');
 const { default: useCastDevice } = require('./useCastDevice');
@@ -266,6 +267,7 @@ const Player = () => {
 
     const onError = React.useCallback((error) => {
         console.error('Player', error);
+        TNP_TELEMETRY.error(error); // TnP
         if (error.critical) {
             setError(error);
         } else {
@@ -538,6 +540,7 @@ const Player = () => {
         video.unload();
 
         if (player.selected && player.stream?.type === 'Ready' && streamingServer.settings?.type !== 'Loading') {
+            TNP_TELEMETRY.load(player.stream.content.url); // TnP
             video.load({
                 stream: {
                     ...player.stream.content,
