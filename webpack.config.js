@@ -185,7 +185,9 @@ module.exports = (env, argv) => ({
         extensions: ['.tsx', '.ts', '.js', '.json', '.less', '.wasm'],
         alias: {
             'stremio': path.resolve(__dirname, 'src'),
-            'stremio-router': path.resolve(__dirname, 'src', 'router')
+            'stremio-router': path.resolve(__dirname, 'src', 'router'),
+            // TnP: hls.js 1.5.4-patch2 с правкой счётчика BUFFER_CODECS (tnp/hls-patched/README.md)
+            'hls.js$': path.resolve(__dirname, 'tnp', 'hls-patched', 'hls.js')
         }
     },
     devServer: {
