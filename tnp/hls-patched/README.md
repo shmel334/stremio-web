@@ -7,6 +7,6 @@ webpack через `resolve.alias['hls.js$']`. Правка — `BufferControlle
 Почему: при продолжении просмотра (Stremio ставит `currentTime` до `attachMedia`) сегмент 0 видео
 разбирается дважды; два события «кодек video» съедали ожидание звука, hls.js создавал один видеобуфер,
 и первая запись звука падала «Attempting to append to the audio SourceBuffer, but it does not exist»
-(хронология web_player_events id 35, 25.10). От кодека звука не зависит — тот же отказ в обычном /watch.
+(25.10). От кодека звука не зависит — тот же отказ в обычном /watch.
 
 При обновлении hls.js в апстриме: перенести правку или проверить, что баг закрыт у них.
